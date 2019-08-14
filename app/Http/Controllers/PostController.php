@@ -4,9 +4,16 @@ namespace App\Http\Controllers;
 
 use App\Post;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class PostController extends Controller
 {
+    //中间件过滤
+    public function __construct()
+    {
+        $this->middleware('auth')->except(['index','show']);
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -14,7 +21,7 @@ class PostController extends Controller
      */
     public function index()
     {
-        $posts = Post::paginate(6);
+        $posts = Post::latest()->paginate(6);
         return view('posts.index',compact('posts'));
     }
 
@@ -25,7 +32,7 @@ class PostController extends Controller
      */
     public function create()
     {
-        //
+        return view('posts.create');
     }
 
     /**
@@ -36,7 +43,14 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        //
+//        dd($request->all());
+        $datas['title'] = $request->title;
+        $datas['body'] = $request->body;
+        $datas['published_at'] = $request->published_at;
+        $datas['author_id'] = Auth::id();
+        Post::create($datas);
+
+        return redirect('posts');
     }
 
     /**

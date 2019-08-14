@@ -3,7 +3,7 @@
 
     @foreach($posts as $post)
         <div class="text-center">
-            {{ $post->title }}
+           <a href="{{ route('posts.show',$post->id) }}"> {{ $post->title }} </a>
             <hr>
         </div>
 
