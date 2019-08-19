@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\BlogCreateUpdateRequest;
 use App\Post;
 use Carbon\Carbon;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class PostController extends Controller
@@ -42,9 +42,9 @@ class PostController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(BlogCreateUpdateRequest $request)
     {
-//        dd($request->all());
+
         $datas['title'] = $request->title;
         $datas['body'] = $request->body;
         $datas['published_at'] = $request->published_at;
@@ -72,9 +72,10 @@ class PostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Post $post)
     {
         //
+        return view('posts.edit',compact('post'));
     }
 
     /**
@@ -84,9 +85,15 @@ class PostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(BlogCreateUpdateRequest $request, Post $post)
     {
-        //
+        $post->update([
+            'title' => $request->title,
+            'body' => $request->body,
+            'published_at' => $request->published_at,
+        ]);
+
+        return redirect(url('posts',$post->id));
     }
 
     /**
@@ -95,8 +102,9 @@ class PostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Post $post)
     {
-        //
+        $post->delete();
+        return redirect('posts');
     }
 }
