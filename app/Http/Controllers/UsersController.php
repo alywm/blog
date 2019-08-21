@@ -22,7 +22,7 @@ class UsersController extends Controller
         $this->validate($request,[
             'name' => 'required|max:50',
             'introduction' => 'required',
-            'password' => 'nullable|confirmed|min:3'
+            'password' => 'nullable|min:3'
         ]);
 
         $datas = [];
@@ -33,6 +33,7 @@ class UsersController extends Controller
         }
 
         $user->update($datas);
+        session()->flash('success', '资料修改成功！');
         return redirect(url('users',$user));
     }
 }
